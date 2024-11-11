@@ -4,55 +4,15 @@ import {
     Text,
     Image,
     StyleSheet,
-    TouchableOpacity,
-    FlatList
+    TouchableOpacity
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 
-// Mock Data
-const mockData = [
-    {
-        id: '1',
-        name: 'Pina Mountain',
-        image: require('../assets/images/bike-1.png'),
-        originalPrice: 449,
-        discountedPrice: 350,
-        discount: '15% OFF',
-        description: 'It is a very important form of writing as we write almost everything in paragraphs, be it an answer, essay, story, emails, etc.',
-    },
-];
+const BikeDetailScreen = ({ route, navigation }) => {
+    const { item } = route.params;
+    const calculatePrice = item.price - (item.price * 15 / 100);
 
-// Render Data Product Item
-const ProductItem = ({ item }) => {
-    return (
-        <View style={styles.container}>
-            <View style={styles.bgItem}>
-                <Image source={item.image} style={styles.productImage} resizeMode="contain" />
-            </View>
-            <Text style={styles.productName}>{item.name}</Text>
-            <View style={styles.priceContainer}>
-                <Text style={styles.discountedPrice}>
-                    {item.discount} | ${item.discountedPrice}
-                </Text>
-                <Text style={styles.originalPrice}>
-                    ${item.originalPrice}
-                </Text>
-            </View>
-            <Text style={styles.descriptionTitle}>Description</Text>
-            <Text style={styles.descriptionText}>{item.description}</Text>
-            <TouchableOpacity style={styles.heartIcon}>
-                <AntDesign name='hearto' size={24} color="black" borderColor="black" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.addToCartButton}>
-                <Text style={styles.addToCartText}>Add to cart</Text>
-            </TouchableOpacity>
-        </View>
-    );
-};
-
-// Component: Product Page
-const ProductPage = () => {
     const [fontsLoaded] = useFonts({
         'Voltaire': require('../assets/fonts/Voltaire-Regular.ttf'),
     });
@@ -62,95 +22,113 @@ const ProductPage = () => {
     }
 
     return (
-        <FlatList
-            data={mockData}
-            renderItem={({ item }) => <ProductItem item={item} />}
-            keyExtractor={item => item.id}
-            contentContainerStyle={styles.pageContainer}
-        />
+        <View style={styles.container}>
+            <View style={styles.Part1}>
+                <View style={styles.BackgroundImage}>
+                    <Image source={{ uri: item.image }} style={{ width: '100%', height: 310 }} />
+                </View>
+            </View>
+
+            <View style={styles.Part2}>
+                <Text style={styles.Name}>{item.name}</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', width: '75%' }}>
+                    <Text style={styles.SaleOff}>15% OFF | ${calculatePrice}</Text>
+                    <Text style={styles.Price}>${item.price}</Text>
+                </View>
+                <Text style={styles.Description}>Description</Text>
+                <Text style={styles.DescriptionContent}>It is a very important form of writing as we write almost everything in paragraphs, be it an answer, essay, story, emails, etc.</Text>
+            </View>
+
+            <View style={styles.Part3}>
+                <TouchableOpacity onPress={() => console.log('Favourite clicked')}>
+                    <AntDesign name='hearto' size={35} color="black" />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.Button} onPress={() => navigation.goBack()}>
+                    <Text style={styles.ButtonName}>Add to cart</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
     );
 };
 
-// CSS StyleSheet
+
 const styles = StyleSheet.create({
-    pageContainer: {
-        flexGrow: 1,
-        paddingHorizontal: 16,
-        backgroundColor: '#FFF',
-    },
     container: {
         flex: 1,
-        marginVertical: 10,
-        padding: 16,
-        backgroundColor: '#FFF',
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: '#000',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    bgItem: {
-        flex: 1,
-        backgroundColor: 'rgba(233, 65, 65, 0.1)',
+    Part1: {
+        flex: 1.5,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    Part2: {
+        flex: 1.5,
+        justifyContent: 'space-around',
+        alignItems: 'flex-start',
+    },
+    Part3: {
+        flex: 0.5,
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        flexDirection: 'row',
+        width: '100%',
+    },
+    BackgroundImage: {
+        width: 339,
+        height: 348,
+        backgroundColor: '#E941411A',
         borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 16,
+        marginBottom: 20,
+        marginTop: 20,
     },
-    productImage: {
-        width: '100%',
-        height: undefined,
-        aspectRatio: 1.5, // Điều chỉnh tỷ lệ để hiển thị đầy đủ hình ảnh
+    Name: {
+        color: '#000000',
+        fontWeight: '400',
+        fontSize: 35,
+        marginLeft: 10,
+        marginTop: 10,
     },
-    productName: {
-        fontFamily: 'Voltaire',
-        fontSize: 28,
-        color: '#000',
-        textAlign: 'center',
-        marginBottom: 10,
+    SaleOff: {
+        color: '#00000096',
+        fontWeight: '400',
+        fontSize: 25,
+        marginLeft: 10,
     },
-    priceContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 10,
-    },
-    discountedPrice: {
-        fontFamily: 'Voltaire',
-        fontSize: 20,
-        color: 'rgba(0, 0, 0, 0.59)',
-    },
-    originalPrice: {
-        fontFamily: 'Voltaire',
-        fontSize: 20,
+    Price: {
+        color: '#000000',
+        fontWeight: '400',
+        fontSize: 25,
         textDecorationLine: 'line-through',
-        color: '#000',
     },
-    descriptionTitle: {
-        fontFamily: 'Voltaire',
-        fontSize: 18,
-        color: '#000',
-        marginBottom: 6,
+    Description: {
+        color: '#000000',
+        fontWeight: '400',
+        fontSize: 25,
+        marginLeft: 10,
     },
-    descriptionText: {
-        fontFamily: 'Voltaire',
-        fontSize: 16,
-        color: 'rgba(0, 0, 0, 0.57)',
-        marginBottom: 10,
+    DescriptionContent: {
+        color: '#00000091',
+        fontWeight: '400',
+        fontSize: 22,
+        marginLeft: 10,
     },
-    heartIcon: {
-        alignSelf: 'flex-start',
-        marginBottom: 16,
-    },
-    addToCartButton: {
+    Button: {
         backgroundColor: '#E94141',
+        width: 269,
+        height: 54,
         borderRadius: 30,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: 12,
     },
-    addToCartText: {
-        fontFamily: 'Voltaire',
-        fontSize: 18,
+    ButtonName: {
         color: '#FFFAFA',
+        fontWeight: '400',
+        fontSize: 25,
     },
 });
 
-export default ProductPage;
+export default BikeDetailScreen;

@@ -49,7 +49,7 @@ const BikeShop = ({ navigation }) => {
     const filteredBikes = selectedCategory === 'All' ? bikes : bikes.filter(bike => bike.type === selectedCategory);
 
     const renderBikeItem = ({ item }) => (
-        <View style={styles.bikeItem}>
+        <TouchableOpacity style={styles.bikeItem} onPress={() => navigation.navigate('Screen03', { item })}>
             <TouchableOpacity style={styles.heartIcon}>
                 <AntDesign name="heart" size={25} color="#E8D9D9" />
             </TouchableOpacity>
@@ -59,7 +59,7 @@ const BikeShop = ({ navigation }) => {
                 <Text style={styles.currencySymbol}>$</Text>
                 {item.price}
             </Text>
-        </View>
+        </TouchableOpacity>
     );
 
     const renderCategoryButton = (category) => (
@@ -102,6 +102,7 @@ const BikeShop = ({ navigation }) => {
         </SafeAreaView>
     );
 };
+
 
 const styles = StyleSheet.create({
     container: {
