@@ -25,7 +25,7 @@ const BikeShop = ({ navigation }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://670b36dcac6860a6c2cb6921.mockapi.io/data');
+                const response = await fetch('https://67302aa666e42ceaf15f8e1a.mockapi.io/api/bikes');
                 const json = await response.json();
                 setBikes(json);
             } catch (error) {
